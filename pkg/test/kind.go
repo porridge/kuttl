@@ -2,9 +2,11 @@ package test
 
 import (
 	"context"
+	"fmt"
 
 	"sigs.k8s.io/kind/pkg/apis/config/v1alpha3"
 	"sigs.k8s.io/kind/pkg/cluster"
+	"sigs.k8s.io/kind/pkg/log"
 	"sigs.k8s.io/kind/pkg/cluster/nodes"
 	"sigs.k8s.io/kind/pkg/cluster/nodeutils"
 
@@ -18,9 +20,49 @@ type kind struct {
 	explicitPath string
 }
 
-func newKind(kindContext string, explicitPath string) kind {
-	provider := cluster.NewProvider()
+type l struct {
+}
 
+func (l *l) Infof(msg string, args ...interface{}) {
+	msg = msg + "\n"
+	fmt.Printf(msg, args...)
+}
+
+func (l *l) Info(msg string) {
+	msg = msg + "\n"
+	fmt.Print(msg)
+}
+
+func (l *l) Warnf(msg string, args ...interface{}) {
+	msg = msg + "\n"
+	fmt.Printf(msg, args...)
+}
+
+func (l *l) Warn(msg string) {
+	msg = msg + "\n"
+	fmt.Print(msg)
+}
+
+func (l *l) Errorf(msg string, args ...interface{}) {
+	msg = msg + "\n"
+	fmt.Printf(msg, args...)
+}
+
+func (l *l) Error(msg string) {
+	msg = msg + "\n"
+	fmt.Print(msg)
+}
+
+func (l *l) V(level log.Level) log.InfoLogger {
+	return l
+}
+
+func (l *l) Enabled() bool {
+	return true
+}
+
+func newKind(kindContext string, explicitPath string) kind {
+	provider := cluster.NewProvider(cluster.ProviderWithLogger(&l{}))
 	return kind{
 		Provider:     provider,
 		context:      kindContext,

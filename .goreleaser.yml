@@ -82,7 +82,7 @@ snapshot:
 
 release:
   github:
-    owner: kudobuilder
+    owner: porridge
     name: kuttl
   draft: false
   prerelease: auto
